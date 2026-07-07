@@ -103,4 +103,143 @@ export function RadioIcon({ size = 24, color = "#ff9900" }) {
   );
 }
 
+export function AcPowerIcon({ size = 24, color = "#ffdd44" }) {
+  // Sine wave with a small lightning bolt over it — mains alternating current.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path
+        d="M2 14 C 4 6, 8 6, 10 14 S 16 22, 18 14 S 22 6, 22 14"
+        stroke={color}
+        strokeWidth="1.8"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M13 2 L8 11 L11.5 11 L10 18"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+export function ChargingIcon({ size = 24, color = "#66ff88" }) {
+  // Battery outline with a lightning bolt through it — wireless charging.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="7" width="16" height="10" rx="1.5" stroke={color} strokeWidth="1.6" fill="none" />
+      <rect x="19" y="10" width="2" height="4" fill={color} />
+      <path d="M12 8 L8 13 L11 13 L10 16" stroke={color} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+export function WalkieTalkieIcon({ size = 24, color = "#ffaa22" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <rect x="8" y="7" width="9" height="15" rx="1.2" fill={color} />
+      <rect x="9.5" y="9" width="6" height="3" rx="0.5" fill="#12122a" />
+      <line x1="14" y1="7" x2="14" y2="2" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="14" cy="2" r="1" fill={color} />
+      <circle cx="10.5" cy="14.5" r="0.7" fill="#12122a" />
+      <circle cx="12.5" cy="14.5" r="0.7" fill="#12122a" />
+      <circle cx="14.5" cy="14.5" r="0.7" fill="#12122a" />
+      <rect x="10" y="17" width="5" height="1" fill="#12122a" />
+      <rect x="10" y="19" width="5" height="1" fill="#12122a" />
+    </svg>
+  );
+}
+
+export function UwbIcon({ size = 24, color = "#22ddff" }) {
+  // Crosshair + concentric rings — precision indoor positioning.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="2" fill={color} />
+      <circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.3" opacity="0.8" />
+      <circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.2" opacity="0.5" strokeDasharray="2 2" />
+      <g stroke={color} strokeWidth="1.4" strokeLinecap="round">
+        <line x1="12" y1="1" x2="12" y2="3.5" />
+        <line x1="12" y1="20.5" x2="12" y2="23" />
+        <line x1="1" y1="12" x2="3.5" y2="12" />
+        <line x1="20.5" y1="12" x2="23" y2="12" />
+      </g>
+    </svg>
+  );
+}
+
+export function TrueDepthIcon({ size = 24, color = "#ff5566" }) {
+  // Face-ID style: viewfinder brackets around a simple face.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <g stroke={color} strokeWidth="1.6" strokeLinecap="round">
+        <path d="M4 8 L4 5 L7 5" />
+        <path d="M20 8 L20 5 L17 5" />
+        <path d="M4 16 L4 19 L7 19" />
+        <path d="M20 16 L20 19 L17 19" />
+      </g>
+      <circle cx="10" cy="11" r="1" fill={color} />
+      <circle cx="14" cy="11" r="1" fill={color} />
+      <path d="M10 15 Q12 17 14 15" stroke={color} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function LightbulbIcon({ size = 24, color = "#ffee66" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" />
+      <rect x="9" y="19" width="6" height="1.5" rx="0.4" />
+      <rect x="9.5" y="21" width="5" height="1.5" rx="0.4" />
+    </svg>
+  );
+}
+
+export function UvIcon({ size = 24, color = "#aa55ff" }) {
+  // Sun with rays — short-wavelength UV light source.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4" fill={color} />
+      <g stroke={color} strokeWidth="1.6" strokeLinecap="round">
+        <line x1="12" y1="1" x2="12" y2="4" />
+        <line x1="12" y1="20" x2="12" y2="23" />
+        <line x1="1" y1="12" x2="4" y2="12" />
+        <line x1="20" y1="12" x2="23" y2="12" />
+        <line x1="4.2" y1="4.2" x2="6.5" y2="6.5" />
+        <line x1="17.5" y1="17.5" x2="19.8" y2="19.8" />
+        <line x1="4.2" y1="19.8" x2="6.5" y2="17.5" />
+        <line x1="17.5" y1="6.5" x2="19.8" y2="4.2" />
+      </g>
+    </svg>
+  );
+}
+
+export function XrayIcon({ size = 24, color = "#bb00ff" }) {
+  // International radiation trefoil — recognizable ionizing-radiation glyph.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <circle cx="12" cy="12" r="2" />
+      <path d="M12 3 A 9 9 0 0 1 19.79 7.5 L15.46 10 A 4 4 0 0 0 12 8 Z" />
+      <path d="M19.79 16.5 A 9 9 0 0 1 12 21 L12 16 A 4 4 0 0 0 15.46 14 Z" />
+      <path d="M4.21 16.5 A 9 9 0 0 1 4.21 7.5 L8.54 10 A 4 4 0 0 0 8.54 14 Z" />
+    </svg>
+  );
+}
+
+export function GammaIcon({ size = 24, color = "#ff44ff" }) {
+  // Stylised atom — evokes nuclear/gamma emission.
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="2" fill={color} />
+      <g stroke={color} strokeWidth="1.4" fill="none">
+        <ellipse cx="12" cy="12" rx="10" ry="4" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-60 12 12)" />
+      </g>
+    </svg>
+  );
+}
+
 

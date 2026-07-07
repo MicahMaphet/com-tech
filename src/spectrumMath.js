@@ -4,11 +4,15 @@
 import { formatFrequency, freqToPosition, LOG_MIN, LOG_MAX } from "./spectrumData";
 
 // ─── SVG canvas geometry ─────────────────────────────────────────────────────
+// Layout (top→bottom): tech-pin area, upper-label strip (ticks + band names),
+// colour bar, then a slim strip below for the high-level category labels.
 export const VB_W = 1000;         // SVG viewBox width
-export const BAR_Y = 50;          // Y start of the colour bar
 export const BAR_H = 70;          // height of the colour bar
-export const PIN_AREA_H = 240;    // space below the bar reserved for pins
-export const SVG_H = BAR_Y + BAR_H + PIN_AREA_H; // 360
+export const PIN_AREA_H = 224;    // space at the top reserved for pins
+export const LABEL_AREA_H = 44;   // room above the bar for ticks & band names
+export const CATEGORY_STRIP_H = 22; // room below the bar for category labels
+export const BAR_Y = PIN_AREA_H + LABEL_AREA_H; // 268 — top of the colour bar
+export const SVG_H = BAR_Y + BAR_H + CATEGORY_STRIP_H; // 360
 
 // ─── zoom limits ─────────────────────────────────────────────────────────────
 export const MIN_ZOOM = 1;
@@ -26,8 +30,8 @@ export function posToHz(pos) {
 }
 
 /** Convert a 0–1 spectrum position to a pixel X inside the SVG viewBox. */
-export function posToX(pos, viewStart, viewEnd) {
-  return ((pos - viewStart) / (viewEnd - viewStart)) * VB_W;
+export function posToX(pos, viewStart, viewEnd, width = VB_W) {
+  return ((pos - viewStart) / (viewEnd - viewStart)) * width;
 }
 
 /**

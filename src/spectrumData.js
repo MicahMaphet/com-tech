@@ -178,6 +178,46 @@ export const SPECTRUM_BANDS = [
 ];
 
 export const TECHNOLOGIES = [
+  // AC Mains Power (ELF)
+  {
+    id: "ac-power",
+    name: "AC Power",
+    fullName: "Alternating Current (Mains Power)",
+    frequency: 60,
+    freqDisplay: "50 – 60 Hz",
+    color: "#ffdd44",
+    svgIcon: "acpower",
+    description: "Household and industrial electrical power delivered as a slowly alternating current",
+    examples: [
+      "Home wall outlets (120 / 230 V)",
+      "Overhead transmission lines",
+      "Household appliances",
+      "Industrial motors & lighting",
+    ],
+    band: "ELF",
+    range: "Wired distribution grid",
+    standard: "IEC 60038 (50 / 60 Hz)",
+  },
+  // Qi Wireless Charging (LF)
+  {
+    id: "qi-charging",
+    name: "Qi Charging",
+    fullName: "Qi Wireless Charging",
+    frequency: 150e3,
+    freqDisplay: "100 – 205 kHz",
+    color: "#66ff88",
+    svgIcon: "charging",
+    description: "Inductive coupling that charges phones and wearables through a pad",
+    examples: [
+      "Wireless phone chargers (MagSafe base)",
+      "Wireless earbud cases",
+      "Electric toothbrushes",
+      "Some smartwatches",
+    ],
+    band: "LF",
+    range: "~4 cm",
+    standard: "Qi (WPC) / Qi2",
+  },
   // NFC
   {
     id: "nfc",
@@ -217,6 +257,26 @@ export const TECHNOLOGIES = [
     band: "MF",
     range: "Hundreds of miles",
     standard: "ITU Region assignments",
+  },
+  // CB Radio (HF)
+  {
+    id: "cb-radio",
+    name: "CB Radio",
+    fullName: "Citizens Band Radio",
+    frequency: 27e6,
+    freqDisplay: "26.965 – 27.405 MHz",
+    color: "#ff8844",
+    svgIcon: "radio",
+    description: "Short-distance two-way voice radio open to the public without a license",
+    examples: [
+      "Long-haul trucker chatter",
+      "Off-road & 4×4 groups",
+      "Farm & ranch operations",
+      "Hobbyist 'handles' community",
+    ],
+    band: "HF",
+    range: "~5 – 15 km",
+    standard: "FCC Part 95 Subpart D",
   },
   // FM Radio
   {
@@ -258,6 +318,26 @@ export const TECHNOLOGIES = [
     range: "~10 meters",
     standard: "RC-5, NEC protocol",
     isIR: true,
+  },
+  // Walkie-Talkie (FRS / GMRS)
+  {
+    id: "walkie-talkie",
+    name: "Walkie-Talkie",
+    fullName: "FRS / GMRS Handheld Radio",
+    frequency: 462e6,
+    freqDisplay: "462 – 467 MHz",
+    color: "#ffaa22",
+    svgIcon: "walkietalkie",
+    description: "Handheld half-duplex two-way radios on the FRS / GMRS shared channels",
+    examples: [
+      "Family hiking radios",
+      "Ski-resort staff",
+      "Warehouse & event crews",
+      "Neighborhood watch",
+    ],
+    band: "UHF",
+    range: "~2 – 8 km (line-of-sight)",
+    standard: "FCC Part 95 (FRS / GMRS)",
   },
   // Bluetooth
   {
@@ -318,6 +398,26 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "~30 m indoors",
     standard: "IEEE 802.11a/n/ac/ax",
+  },
+  // Ultra-Wideband (Apple U1 / U2)
+  {
+    id: "uwb",
+    name: "UWB (Apple U1)",
+    fullName: "Ultra-Wideband (Apple U1 / U2)",
+    frequency: 6.5e9,
+    freqDisplay: "6.24 – 8.24 GHz",
+    color: "#22ddff",
+    svgIcon: "uwb",
+    description: "Wide-spectrum radio pulses giving centimeter-level indoor positioning",
+    examples: [
+      "AirTag Precision Finding",
+      "iPhone hand-off to HomePod",
+      "BMW / Genesis digital car keys",
+      "Nearby Interaction between iPhones",
+    ],
+    band: "SHF",
+    range: "~10 – 30 m",
+    standard: "IEEE 802.15.4z",
   },
   // Microwave Oven
   {
@@ -419,6 +519,46 @@ export const TECHNOLOGIES = [
     range: "Global coverage",
     standard: "Ka-band ITU allocation",
   },
+  // Automotive Millimeter-Wave Radar (EHF)
+  {
+    id: "auto-radar",
+    name: "Auto Radar",
+    fullName: "Automotive Millimeter-Wave Radar",
+    frequency: 77e9,
+    freqDisplay: "76 – 81 GHz",
+    color: "#33ffaa",
+    svgIcon: "radar",
+    description: "Millimeter-wave radar on cars for cruise control and collision avoidance",
+    examples: [
+      "Adaptive cruise control",
+      "Automatic emergency braking",
+      "Blind-spot monitoring",
+      "Forward-collision radar (Tesla, Waymo)",
+    ],
+    band: "EHF",
+    range: "~150 – 250 m",
+    standard: "ETSI EN 302 264 (77 GHz)",
+  },
+  // Apple TrueDepth Camera (Near-IR)
+  {
+    id: "truedepth",
+    name: "TrueDepth",
+    fullName: "Apple TrueDepth Camera (Face ID)",
+    frequency: 319e12, // ~940 nm VCSEL
+    freqDisplay: "~319 THz (940 nm)",
+    color: "#ff5566",
+    svgIcon: "truedepth",
+    description: "Projects ~30,000 near-infrared dots to build a 3-D depth map of a face",
+    examples: [
+      "Face ID authentication (iPhone / iPad Pro)",
+      "Animoji & Memoji facial tracking",
+      "Portrait-mode selfie lighting",
+      "AR face effects",
+    ],
+    band: "Near-IR",
+    range: "~20 – 50 cm",
+    standard: "Apple TrueDepth (940 nm)",
+  },
   // Fiber Optic
   {
     id: "fiber",
@@ -478,6 +618,86 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "Up to 400 km (military)",
     standard: "Various IEEE radar bands",
+  },
+  // Visible-Light LED
+  {
+    id: "led-light",
+    name: "LED Light",
+    fullName: "Visible-Light LED",
+    frequency: 500e12,
+    freqDisplay: "~430 – 750 THz",
+    color: "#ffee66",
+    svgIcon: "lightbulb",
+    description: "Solid-state emitters producing visible light for illumination and displays",
+    examples: [
+      "Home & office lighting",
+      "TV & phone display backlights",
+      "Car headlights",
+      "Traffic signals",
+    ],
+    band: "Visible",
+    range: "Optical line-of-sight",
+    standard: "IEC 62504",
+  },
+  // UV-C Germicidal Light
+  {
+    id: "uv-sterilizer",
+    name: "UV-C Sterilizer",
+    fullName: "Ultraviolet-C Germicidal Light",
+    frequency: 1.18e15, // ~254 nm
+    freqDisplay: "~1.18 PHz (254 nm)",
+    color: "#aa55ff",
+    svgIcon: "uv",
+    description: "Short-wavelength UV that damages microbial DNA to disinfect surfaces and water",
+    examples: [
+      "Hospital-room disinfection lamps",
+      "Municipal drinking-water treatment",
+      "HVAC in-duct sterilizers",
+      "Phone / toothbrush UV cases",
+    ],
+    band: "UV-C",
+    range: "Direct exposure (cm – m)",
+    standard: "IEC 62471 (photobiological safety)",
+  },
+  // Diagnostic Medical X-Ray
+  {
+    id: "xray-medical",
+    name: "Medical X-Ray",
+    fullName: "Diagnostic Medical X-Ray",
+    frequency: 3e18, // ~12 keV
+    freqDisplay: "~3 × 10¹⁸ Hz (~12 keV)",
+    color: "#bb00ff",
+    svgIcon: "xray",
+    description: "Ionizing radiation that penetrates soft tissue to image bone and internal structures",
+    examples: [
+      "Dental & chest X-rays",
+      "CT scans",
+      "Airport carry-on scanners",
+      "Mammography",
+    ],
+    band: "X-Ray",
+    range: "Contained in shielded rooms",
+    standard: "IEC 60601-2-54",
+  },
+  // PET / Gamma Imaging
+  {
+    id: "gamma-pet",
+    name: "PET / Gamma",
+    fullName: "PET Scan Gamma Imaging",
+    frequency: 1.24e20, // 511 keV annihilation photons
+    freqDisplay: "~1.24 × 10²⁰ Hz (511 keV)",
+    color: "#ff44ff",
+    svgIcon: "gamma",
+    description: "Detects gamma photons emitted by positron annihilation in radiotracers",
+    examples: [
+      "Oncology PET-CT scans",
+      "Brain metabolism imaging",
+      "Cardiac perfusion studies",
+      "Radiopharmaceutical uptake mapping",
+    ],
+    band: "Gamma",
+    range: "Detector ring (~50 cm)",
+    standard: "IEC 61675-1 (PET performance)",
   },
 ];
 

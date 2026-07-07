@@ -29,6 +29,20 @@ export default function SpectrumViz() {
   const containerRef = useRef(null);
   const { view, applyZoom, applyPan, focusTech, resetView } = useSpectrumView();
   const [selectedTech, setSelectedTech] = useState(null);
+  // Track the container's rendered CSS width so we can drive the SVG viewBox
+  // 1:1 with pixels. That avoids the horizontal stretching ("squished logos")
+  // caused by preserveAspectRatio="none" against a fixed 1000-unit viewBox.
+  const [width, setWidth] = useState(VB_W);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => setWidth(Math.max(el.clientWidth, 1));
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const { s, e } = view;
   const viewRange = e - s;
@@ -202,7 +216,7 @@ export default function SpectrumViz() {
         onClick={() => setSelectedTech(null)}
       >
         <svg
-          viewBox={`0 0 ${VB_W} ${SVG_H}`}
+          viewBox={`0 0 ${width} ${SVG_H}`}
           width="100%"
           height={SVG_H}
           preserveAspectRatio="none"
@@ -234,8 +248,8 @@ export default function SpectrumViz() {
           {visibleBands.map((band) => {
             const bS = freqToPosition(band.freqMin);
             const bE = freqToPosition(band.freqMax);
-            const x = posToX(bS, s, e);
-            const w = ((bE - bS) / viewRange) * VB_W;
+            const x = posToX(bS, s, e, width);
+            const w = ((bE - bS) / viewRange) * width;
             const wFrac = (bE - bS) / viewRange;
 
             return (
@@ -268,7 +282,7 @@ export default function SpectrumViz() {
                 {wFrac > 0.06 && (
                   <text
                     x={x + w / 2}
-                    y={BAR_Y - 8}
+                    y={BAR_Y - 32}
                     textAnchor="middle"
                     fill={band.color === "rainbow" ? "#ffdd44" : band.color}
                     fontSize={wFrac > 0.12 ? 11 : 9}
@@ -282,7 +296,8 @@ export default function SpectrumViz() {
             );
           })}
 
-          {/* High-level category labels (Radio, Microwaves, IR, ...) */}
+          {/* High-level category labels (Radio, Microwaves, IR, ...)
+              in the slim strip directly below the colour bar */}
           {visibleCategories.map((cat) => {
             const cS = freqToPosition(cat.freqMin);
             const cE = freqToPosition(cat.freqMax);
@@ -291,7 +306,7 @@ export default function SpectrumViz() {
             const vS = Math.max(cS, s);
             const vE = Math.min(cE, e);
             const midPos = (vS + vE) / 2;
-            const x = posToX(midPos, s, e);
+            const x = posToX(midPos, s, e, width);
             const wFrac = (vE - vS) / viewRange;
             if (wFrac < 0.04) return null;
             return (
@@ -311,23 +326,23 @@ export default function SpectrumViz() {
             );
           })}
 
-          {/* Tick marks (moved below the category label row) */}
+          {/* Tick marks (immediately above the bar) */}
           {ticks.map(({ pos, label }) => {
-            const x = posToX(pos, s, e);
-            if (x < -20 || x > VB_W + 20) return null;
+            const x = posToX(pos, s, e, width);
+            if (x < -20 || x > width + 20) return null;
             return (
               <g key={label}>
                 <line
                   x1={x}
-                  y1={BAR_Y + BAR_H + 26}
+                  y1={BAR_Y - 10}
                   x2={x}
-                  y2={BAR_Y + BAR_H + 34}
+                  y2={BAR_Y}
                   stroke="#666"
                   strokeWidth={1}
                 />
                 <text
                   x={x}
-                  y={BAR_Y + BAR_H + 46}
+                  y={BAR_Y - 16}
                   textAnchor="middle"
                   fill="#888"
                   fontSize={9}
@@ -343,7 +358,7 @@ export default function SpectrumViz() {
           {/* Technology pins */}
           {visibleTechs.map(({ tech, idx }) => {
             const p = tech.isIR ? freqToPosition(300e9) : freqToPosition(tech.frequency);
-            const x = posToX(p, s, e);
+            const x = posToX(p, s, e, width);
             return (
               <TechPin
                 key={tech.id}

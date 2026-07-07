@@ -2,9 +2,13 @@
 // module can be Fast Refresh-friendly (only-export-components lint rule).
 
 import {
+  AcPowerIcon,
   BluetoothIcon,
   CellularIcon,
+  ChargingIcon,
   FiberIcon,
+  GammaIcon,
+  LightbulbIcon,
   MicrowaveIcon,
   NfcIcon,
   RadarIcon,
@@ -12,7 +16,12 @@ import {
   RemoteIcon,
   RfidIcon,
   SatelliteIcon,
+  TrueDepthIcon,
+  UvIcon,
+  UwbIcon,
+  WalkieTalkieIcon,
   WifiIcon,
+  XrayIcon,
 } from "./TechIcons";
 
 const ICONS = {
@@ -27,6 +36,15 @@ const ICONS = {
   remote: RemoteIcon,
   rfid: RfidIcon,
   radio: RadioIcon,
+  acpower: AcPowerIcon,
+  charging: ChargingIcon,
+  walkietalkie: WalkieTalkieIcon,
+  uwb: UwbIcon,
+  truedepth: TrueDepthIcon,
+  lightbulb: LightbulbIcon,
+  uv: UvIcon,
+  xray: XrayIcon,
+  gamma: GammaIcon,
 };
 
 /** Render the icon component for a given `svgIcon` key, or `null`. */

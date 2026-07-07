@@ -4,15 +4,14 @@ import { BAR_H, BAR_Y } from "../spectrumMath";
 /**
  * A single technology marker anchored to a position on the spectrum bar.
  *
- * Alternates up/down based on `idx` parity so labels don't collide, and
- * staggers stem length by `idx % 4` for further separation at low zoom.
+ * All pins point upward from the top of the bar; `idx % 4` staggers the stem
+ * length so neighbours at similar frequencies don't collide vertically.
  */
 export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel }) {
-  const isDown = idx % 2 === 1;
-  const stemH = 42 + (idx % 4) * 16;
+  const stemH = 90 + (idx % 4) * 22;
   const iconR = isSelected ? 22 : 17;
-  const pinY = BAR_Y + BAR_H;
-  const iconY = isDown ? pinY + stemH : pinY - stemH;
+  const pinY = BAR_Y; // pins emerge from the top of the bar
+  const iconY = pinY - stemH;
 
   const showLabel = isSelected || zoomLevel > 4;
   const innerSize = (iconR - 3) * 2;
@@ -43,7 +42,6 @@ export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel }) {
         y2={iconY}
         stroke={tech.color}
         strokeWidth={isSelected ? 2 : 1.4}
-        strokeDasharray={isDown ? "none" : "4,3"}
         opacity={0.8}
       />
       {/* circle bubble */}
@@ -81,7 +79,7 @@ export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel }) {
       {showLabel && (
         <text
           x={0}
-          y={isDown ? iconY + iconR + 14 : iconY - iconR - 5}
+          y={iconY - iconR - 5}
           textAnchor="middle"
           fill={tech.color}
           fontSize={isSelected ? 11 : 9}
