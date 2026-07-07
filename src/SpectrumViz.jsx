@@ -8,6 +8,7 @@ import {
   formatFrequency,
   freqToPosition,
   SPECTRUM_BANDS,
+  SPECTRUM_CATEGORIES,
   TECHNOLOGIES,
 } from "./spectrumData";
 import {
@@ -101,6 +102,16 @@ export default function SpectrumViz() {
         const bS = freqToPosition(b.freqMin);
         const bE = freqToPosition(b.freqMax);
         return bE > s && bS < e;
+      }),
+    [s, e],
+  );
+
+  const visibleCategories = useMemo(
+    () =>
+      SPECTRUM_CATEGORIES.filter((c) => {
+        const cS = freqToPosition(c.freqMin);
+        const cE = freqToPosition(c.freqMax);
+        return cE > s && cS < e;
       }),
     [s, e],
   );
@@ -271,7 +282,36 @@ export default function SpectrumViz() {
             );
           })}
 
-          {/* Tick marks */}
+          {/* High-level category labels (Radio, Microwaves, IR, ...) */}
+          {visibleCategories.map((cat) => {
+            const cS = freqToPosition(cat.freqMin);
+            const cE = freqToPosition(cat.freqMax);
+            // Clip to current view so long categories (like Radio) stay
+            // centered on the *visible* part of the band.
+            const vS = Math.max(cS, s);
+            const vE = Math.min(cE, e);
+            const midPos = (vS + vE) / 2;
+            const x = posToX(midPos, s, e);
+            const wFrac = (vE - vS) / viewRange;
+            if (wFrac < 0.04) return null;
+            return (
+              <text
+                key={cat.name}
+                x={x}
+                y={BAR_Y + BAR_H + 16}
+                textAnchor="middle"
+                fill="#e8e8ff"
+                fontSize={13}
+                fontWeight="700"
+                fontFamily="'Segoe UI', system-ui, sans-serif"
+                style={{ pointerEvents: "none" }}
+              >
+                {cat.name}
+              </text>
+            );
+          })}
+
+          {/* Tick marks (moved below the category label row) */}
           {ticks.map(({ pos, label }) => {
             const x = posToX(pos, s, e);
             if (x < -20 || x > VB_W + 20) return null;
@@ -279,15 +319,15 @@ export default function SpectrumViz() {
               <g key={label}>
                 <line
                   x1={x}
-                  y1={BAR_Y + BAR_H}
+                  y1={BAR_Y + BAR_H + 26}
                   x2={x}
-                  y2={BAR_Y + BAR_H + 10}
+                  y2={BAR_Y + BAR_H + 34}
                   stroke="#666"
                   strokeWidth={1}
                 />
                 <text
                   x={x}
-                  y={BAR_Y + BAR_H + 22}
+                  y={BAR_Y + BAR_H + 46}
                   textAnchor="middle"
                   fill="#888"
                   fontSize={9}

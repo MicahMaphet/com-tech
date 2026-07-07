@@ -1,6 +1,19 @@
 // Electromagnetic spectrum data
 // Frequencies in Hz
 
+// High-level EM spectrum categories that group the ITU bands into the
+// familiar physics labels (radio, microwaves, IR, visible, UV, X-ray, gamma).
+// Boundaries are non-overlapping and align with the SPECTRUM_BANDS edges.
+export const SPECTRUM_CATEGORIES = [
+  { name: "Radio",       freqMin: 3,       freqMax: 3e9 },
+  { name: "Microwaves",  freqMin: 3e9,     freqMax: 300e9 },
+  { name: "Infrared",    freqMin: 300e9,   freqMax: 430e12 },
+  { name: "Visible",     freqMin: 430e12,  freqMax: 750e12 },
+  { name: "Ultraviolet", freqMin: 750e12,  freqMax: 30e15 },
+  { name: "X-rays",      freqMin: 30e15,   freqMax: 30e18 },
+  { name: "Gamma",       freqMin: 30e18,   freqMax: 3e22 },
+];
+
 export const SPECTRUM_BANDS = [
   {
     name: "Extremely Low Frequency",
