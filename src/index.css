@@ -16,7 +16,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Segoe UI', system-ui, sans-serif;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
 }
 
@@ -24,7 +24,7 @@ body {
 .app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ── header ────────────────────────────────────────────────────────────────── */
@@ -52,6 +52,8 @@ h1 {
 }
 
 .rainbow-text {
+  /* Fallback for browsers that fail the gradient-clip trick. */
+  color: #d4d4f0;
   background: linear-gradient(
     90deg,
     #ff0000, #ff7700, #ffee00, #00ff44, #00aaff, #aa00ff, #ff0099
@@ -151,6 +153,11 @@ h1 {
   overflow: hidden;
   background: linear-gradient(180deg, #0a0a1e 0%, #0d0d24 100%);
   touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+.viz-container.is-dragging {
+  cursor: grabbing;
 }
 
 .spectrum-svg {
@@ -232,6 +239,8 @@ h1 {
   gap: 8px;
   margin: 12px 0;
 }
+.info-grid dt,
+.info-grid dd { margin: 0; }
 
 .info-item {
   background: var(--surface2);
@@ -306,17 +315,12 @@ h1 {
   white-space: nowrap;
   min-width: 80px;
 }
-.freq-label:last-child { text-align: right; }
+.freq-label-right { text-align: right; }
 
 /* ── minimap ───────────────────────────────────────────────────────────────── */
 .minimap {
   flex: 1;
   height: 14px;
-  background: linear-gradient(
-    to right,
-    #4a0080, #0000cc, #0088cc, #00cc88, #44cc44, #aacc00,
-    #cc8800, #cc4400, rainbow, #8800cc, #aa00ff, #ff00ff
-  );
   background: linear-gradient(
     to right,
     #7b00ff, #0000ff, #00aaff, #00cc88, #44cc44,
@@ -342,3 +346,18 @@ h1 {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── focus-visible ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

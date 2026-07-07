@@ -103,19 +103,4 @@ export function RadioIcon({ size = 24, color = "#ff9900" }) {
   );
 }
 
-export function getTechIcon(svgIcon, size, color) {
-  switch (svgIcon) {
-    case "bluetooth": return <BluetoothIcon size={size} color={color} />;
-    case "wifi": return <WifiIcon size={size} color={color} />;
-    case "cellular": return <CellularIcon size={size} color={color} />;
-    case "satellite": return <SatelliteIcon size={size} color={color} />;
-    case "microwave": return <MicrowaveIcon size={size} color={color} />;
-    case "fiber": return <FiberIcon size={size} color={color} />;
-    case "nfc": return <NfcIcon size={size} color={color} />;
-    case "radar": return <RadarIcon size={size} color={color} />;
-    case "remote": return <RemoteIcon size={size} color={color} />;
-    case "rfid": return <RfidIcon size={size} color={color} />;
-    case "radio": return <RadioIcon size={size} color={color} />;
-    default: return null;
-  }
-}
+

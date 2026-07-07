@@ -2,9 +2,9 @@
 
 ## Overview
 
-A single-page React app (Vite + React 18, no external UI libraries) that renders
+A single-page React app (Vite + React 19, no external UI libraries) that renders
 the full electromagnetic spectrum from **3 Hz to 3 × 10²² Hz** on a logarithmic
-scale. Users can zoom up to 150× and pan to inspect 14 real-world wireless
+scale. Users can zoom up to 150× and pan to inspect 15 real-world wireless
 technologies pinned at their exact frequencies.
 
 ---
@@ -14,10 +14,11 @@ technologies pinned at their exact frequencies.
 | Layer | Choice |
 |---|---|
 | Bundler | Vite 8 |
-| Framework | React 18 (functional components + hooks only) |
+| Framework | React 19 (functional components + hooks only) |
 | Styling | Plain CSS custom properties — no CSS-in-JS, no Tailwind |
 | Icons | Hand-written inline SVG components (no icon library) |
-| Dependencies | Only React + ReactDOM (24 packages total) |
+| Lint | oxlint (React + Oxc plugins) |
+| Dependencies | Only React + ReactDOM |
 
 Run:
 ```
@@ -31,15 +32,23 @@ npm run build  # production build → dist/
 
 ```
 com-tech/
-├── index.html                  # Vite entry; sets page title
+├── index.html                       # Vite entry; sets page title
 └── src/
-    ├── main.jsx                # ReactDOM.createRoot mount
-    ├── App.jsx                 # Thin wrapper → <SpectrumViz />
-    ├── index.css               # All styles (CSS custom props, dark theme)
-    ├── spectrumData.js         # Pure data + math utilities
-    ├── SpectrumViz.jsx         # Main component (all interaction logic + SVG)
+    ├── main.jsx                     # ReactDOM.createRoot mount
+    ├── App.jsx                      # Thin wrapper → <SpectrumViz />
+    ├── SpectrumViz.jsx              # Orchestrator: composes hooks + components
+    ├── index.css                    # All styles (CSS custom props, dark theme)
+    ├── spectrumData.js              # Pure data (SPECTRUM_BANDS, TECHNOLOGIES) + freqToPosition / formatFrequency
+    ├── spectrumMath.js              # posToHz, posToX, clamp, generateTicks, geometry constants
+    ├── hooks/
+    │   ├── useSpectrumView.js       # View window state + zoom / pan / focus / reset
+    │   └── useSpectrumInteractions.js  # Wheel, mouse-drag, touch (pinch + swipe)
+    ├── components/
+    │   ├── TechPin.jsx              # Pin marker on the spectrum bar
+    │   └── InfoPanel.jsx            # Slide-in details card (owns Esc-to-close)
     └── icons/
-        └── TechIcons.jsx       # One SVG component per technology type
+        ├── TechIcons.jsx            # One SVG component per technology type
+        └── getTechIcon.jsx          # Dispatcher used everywhere else
 ```
 
 ---
@@ -107,29 +116,29 @@ to reduce label collisions at low zoom levels.
 
 ```
 App
-└── SpectrumViz               (all state lives here)
-    ├── <header>              sticky; zoom +/− buttons, reset, zoom readout
-    ├── <nav.tech-nav>        quick-jump chips for all 14 technologies
-    ├── <div.viz-container>   touch-action:none; captures all pointer events
-    │   ├── <svg viewBox>     the spectrum canvas
-    │   │   ├── <defs>        rainbow gradient, glow filter
-    │   │   ├── Band rects    one <rect> per visible SPECTRUM_BAND
-    │   │   ├── Tick marks    <line> + <text> per generated tick
-    │   │   └── TechPin ×N   one per visible TECHNOLOGY
-    │   │       ├── <line>    stem
-    │   │       ├── <circle>  bubble
-    │   │       ├── <foreignObject> → SVG icon component
-    │   │       └── <text>    name label (shown when selected OR zoom > 4×)
-    │   └── InfoPanel         absolute overlay, shown when selectedTech != null
-    └── <footer.freq-footer>  left freq · minimap · right freq
+└── SpectrumViz               (orchestrator; owns selection state)
+    ├── useSpectrumView         hook: view window {s, e} + zoom/pan/focus/reset
+    ├── useSpectrumInteractions hook: wheel + mouse drag + touch (pinch, swipe)
+    ├── <header>                sticky; zoom +/− buttons, reset, zoom readout
+    ├── <nav.tech-nav>          quick-jump chips for all technologies
+    ├── <div.viz-container>     touch-action:none; captures all pointer events
+    │   ├── <svg viewBox>       the spectrum canvas
+    │   │   ├── <defs>          rainbow gradient, glow filter
+    │   │   ├── Band rects     one <rect> per visible SPECTRUM_BAND
+    │   │   ├── Tick marks     <line> + <text> per generated tick
+    │   │   └── TechPin ×N     one per visible TECHNOLOGY
+    │   └── InfoPanel           absolute overlay, shown when selectedTech != null;
+    │                            closes on Esc (own useEffect)
+    └── <footer.freq-footer>    left freq · minimap · right freq
 ```
 
-### State (all in `SpectrumViz`)
+### State
 
-| State | Type | Description |
-|---|---|---|
-| `view` | `{s, e}` | Current viewport 0–1 window |
-| `selectedTech` | `Technology \| null` | Drives `TechPin` highlight + `InfoPanel` |
+| Owner | State | Type | Description |
+|---|---|---|---|
+| `useSpectrumView` | `view` | `{s, e}` | Current viewport 0–1 window |
+| `useSpectrumInteractions` | `isDragging` | `boolean` | Toggles the `.is-dragging` class for the `grabbing` cursor |
+| `SpectrumViz` | `selectedTech` | `Technology \| null` | Drives `TechPin` highlight + `InfoPanel` |
 
 No global state, no context, no reducers.
 
@@ -145,7 +154,10 @@ No global state, no context, no reducers.
 | Pin click | `onClick` in `TechPin` | Toggles `selectedTech` |
 | Background click | `onClick` on `.viz-container` | Clears `selectedTech` |
 | + / − buttons | `applyZoom(0.5, 1.3 or 1/1.3)` | Zooms around centre |
-| Reset | inline handler | `view = {s:0, e:1}`, clears selection |
+| Reset button / `0` key | `resetView()` | `view = {s:0, e:1}`, clears selection |
+| `+` / `-` keys | `applyZoom(0.5, …)` | Keyboard zoom |
+| `←` / `→` keys | `applyPan(±0.15)` | Keyboard pan |
+| `Esc` key | `InfoPanel` `useEffect` | Closes the info panel |
 
 ### `applyZoom(focalFrac, factor)`
 
@@ -204,7 +216,7 @@ Full band list in order:
 
 Spans: **3 Hz → 3 × 10²² Hz** (≈ 22 decades on the log axis).
 
-### `TECHNOLOGIES` — 14 entries
+### `TECHNOLOGIES` — 15 entries
 
 ```ts
 {
@@ -214,7 +226,7 @@ Spans: **3 Hz → 3 × 10²² Hz** (≈ 22 decades on the log axis).
   frequency: number     // Hz — canonical pin position on spectrum
   freqDisplay: string   // human-readable range string
   color: string         // hex — used for pin, chip border, info panel accent
-  svgIcon: string       // key into getTechIcon() switch
+  svgIcon: string       // key into getTechIcon() (see src/icons/getTechIcon.jsx)
   description: string
   examples: string[]    // 4 real-world examples
   band: string          // ITU band abbreviation(s)
@@ -252,7 +264,7 @@ Spans: **3 Hz → 3 × 10²² Hz** (≈ 22 decades on the log axis).
 
 ---
 
-## Icons (`src/icons/TechIcons.jsx`)
+## Icons (`src/icons/`)
 
 Each technology has a hand-drawn SVG icon component:
 
@@ -366,7 +378,7 @@ No other files need to change unless you want a dedicated icon.
 ### Add a new icon
 
 1. Create a new component in `src/icons/TechIcons.jsx`
-2. Add a case to the `getTechIcon` switch at the bottom of that file
+2. Register it in the `ICONS` map in `src/icons/getTechIcon.jsx`
 3. Set `svgIcon` to the new key in your technology entry
 
 ### Adjust the spectrum range
@@ -376,4 +388,4 @@ recomputes automatically.
 
 ### Change zoom limits
 
-Edit `MIN_ZOOM` and `MAX_ZOOM` constants at the top of `src/SpectrumViz.jsx`.
+Edit `MIN_ZOOM` and `MAX_ZOOM` constants in `src/spectrumMath.js`.

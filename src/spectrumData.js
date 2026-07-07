@@ -173,7 +173,6 @@ export const TECHNOLOGIES = [
     frequency: 13.56e6,
     freqDisplay: "13.56 MHz",
     color: "#00c8ff",
-    icon: "📡",
     svgIcon: "nfc",
     description: "Short-range wireless for contactless payments and data transfer",
     examples: [
@@ -194,7 +193,6 @@ export const TECHNOLOGIES = [
     frequency: 1e6,
     freqDisplay: "535 kHz – 1.7 MHz",
     color: "#ff9900",
-    icon: "📻",
     svgIcon: "radio",
     description: "Analog broadcast radio using amplitude modulation",
     examples: [
@@ -215,7 +213,6 @@ export const TECHNOLOGIES = [
     frequency: 100e6,
     freqDisplay: "87.5 – 108 MHz",
     color: "#ff6600",
-    icon: "📻",
     svgIcon: "radio",
     description: "Analog broadcast radio using frequency modulation",
     examples: [
@@ -236,7 +233,6 @@ export const TECHNOLOGIES = [
     frequency: 38e3,
     freqDisplay: "300 GHz – 430 THz",
     color: "#cc2200",
-    icon: "🎮",
     svgIcon: "remote",
     description: "Infrared light pulses used for line-of-sight remote control",
     examples: [
@@ -258,7 +254,6 @@ export const TECHNOLOGIES = [
     frequency: 2.4e9,
     freqDisplay: "2.4 – 2.485 GHz",
     color: "#0082fc",
-    icon: "🔵",
     svgIcon: "bluetooth",
     description: "Short-range wireless protocol for personal area networks",
     examples: [
@@ -279,7 +274,6 @@ export const TECHNOLOGIES = [
     frequency: 2.45e9,
     freqDisplay: "2.4 – 2.5 GHz",
     color: "#00aaff",
-    icon: "📶",
     svgIcon: "wifi",
     description: "Most common Wi-Fi band with longer range and better wall penetration",
     examples: [
@@ -300,7 +294,6 @@ export const TECHNOLOGIES = [
     frequency: 5.5e9,
     freqDisplay: "5.1 – 5.9 GHz",
     color: "#0066ff",
-    icon: "📶",
     svgIcon: "wifi",
     description: "Faster Wi-Fi band with less interference, shorter range",
     examples: [
@@ -321,7 +314,6 @@ export const TECHNOLOGIES = [
     frequency: 2.45e9,
     freqDisplay: "2.45 GHz",
     color: "#ff4400",
-    icon: "🍲",
     svgIcon: "microwave",
     description: "Uses microwave radiation to heat food by exciting water molecules",
     examples: [
@@ -342,7 +334,6 @@ export const TECHNOLOGIES = [
     frequency: 1.8e9,
     freqDisplay: "700 MHz – 2.6 GHz",
     color: "#ff6600",
-    icon: "📱",
     svgIcon: "cellular",
     description: "Fourth-generation cellular standard enabling mobile broadband",
     examples: [
@@ -363,7 +354,6 @@ export const TECHNOLOGIES = [
     frequency: 28e9,
     freqDisplay: "600 MHz – 100 GHz",
     color: "#ff3300",
-    icon: "📱",
     svgIcon: "cellular",
     description: "Next-gen cellular for ultra-fast speeds and massive device density",
     examples: [
@@ -384,7 +374,6 @@ export const TECHNOLOGIES = [
     frequency: 1.575e9,
     freqDisplay: "1.575 GHz (L1)",
     color: "#ffcc00",
-    icon: "🛰️",
     svgIcon: "satellite",
     description: "Satellite navigation constellation for global positioning",
     examples: [
@@ -405,7 +394,6 @@ export const TECHNOLOGIES = [
     frequency: 20e9,
     freqDisplay: "17.7 – 30 GHz (Ka-band)",
     color: "#ffaa00",
-    icon: "🛰️",
     svgIcon: "satellite",
     description: "High-throughput satellite broadband internet",
     examples: [
@@ -426,7 +414,6 @@ export const TECHNOLOGIES = [
     frequency: 193e12,
     freqDisplay: "~193 THz (1550 nm)",
     color: "#00ffaa",
-    icon: "💡",
     svgIcon: "fiber",
     description: "Transmits data as pulses of light through glass fiber strands",
     examples: [
@@ -447,7 +434,6 @@ export const TECHNOLOGIES = [
     frequency: 915e6,
     freqDisplay: "125 kHz – 960 MHz",
     color: "#cc44ff",
-    icon: "🏷️",
     svgIcon: "rfid",
     description: "Uses radio waves to read and capture data from tags",
     examples: [
@@ -468,7 +454,6 @@ export const TECHNOLOGIES = [
     frequency: 10e9,
     freqDisplay: "1 – 100 GHz",
     color: "#00ff88",
-    icon: "📡",
     svgIcon: "radar",
     description: "Detects objects by transmitting radio waves and sensing reflections",
     examples: [
