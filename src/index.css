@@ -1,3 +1,43 @@
+/* ── page-level tabs ──────────────────────────────────────────────────────── */
+.page-tabs {
+  display: flex;
+  gap: 0;
+  background: #07071a;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.page-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  letter-spacing: 0.02em;
+  margin-bottom: -2px;
+}
+.page-tab:hover {
+  color: var(--text);
+  background: #10102a;
+}
+.page-tab--active {
+  color: #fff;
+  border-bottom-color: var(--accent);
+  background: #10102a;
+}
+.page-tab-icon {
+  font-size: 1rem;
+}
+
 /* ── reset & base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -20,11 +60,21 @@ body {
   overflow-x: hidden;
 }
 
-/* ── app root ──────────────────────────────────────────────────────────────── */
+/* ── top-level shell (owns the full viewport height) ───────────────────────── */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ── app root (fills whatever height remains after the tab bar) ─────────────── */
 .app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  flex: 1;
+  min-height: 0;   /* lets flex shrink below content size so footer stays visible */
+  overflow: hidden;
 }
 
 /* ── header ────────────────────────────────────────────────────────────────── */
@@ -49,6 +99,18 @@ body {
 h1 {
   font-size: clamp(1.1rem, 3vw, 1.6rem);
   line-height: 1.2;
+}
+
+.power-text {
+  color: #ffaa44;
+  background: linear-gradient(
+    90deg,
+    #190044, #3300aa, #0088cc, #00bb66, #cccc00, #ff9900, #ff3300
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
 }
 
 .rainbow-text {
@@ -332,6 +394,14 @@ h1 {
   border-radius: 7px;
   position: relative;
   overflow: hidden;
+}
+
+.power-minimap {
+  background: linear-gradient(
+    to right,
+    #190044, #3300aa, #0044cc, #00aacc,
+    #00bb66, #cccc00, #ff9900, #ff3300
+  );
 }
 
 .minimap-view {

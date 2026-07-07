@@ -7,7 +7,7 @@ import { BAR_H, BAR_Y } from "../spectrumMath";
  * All pins point upward from the top of the bar; `idx % 4` staggers the stem
  * length so neighbours at similar frequencies don't collide vertically.
  */
-export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel }) {
+export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel, displayLabel = tech.freqDisplay }) {
   const stemH = 90 + (idx % 4) * 22;
   const iconR = isSelected ? 22 : 17;
   const pinY = BAR_Y; // pins emerge from the top of the bar
@@ -26,7 +26,7 @@ export function TechPin({ tech, idx, x, isSelected, onClick, zoomLevel }) {
       }}
       role="button"
       tabIndex={0}
-      aria-label={`${tech.name} — ${tech.freqDisplay}`}
+      aria-label={`${tech.name} — ${displayLabel}`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();

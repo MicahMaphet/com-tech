@@ -197,6 +197,8 @@ export const TECHNOLOGIES = [
     band: "ELF",
     range: "Wired distribution grid",
     standard: "IEC 60038 (50 / 60 Hz)",
+    powerW: 1000,
+    powerDisplay: "~1 kW (household circuit)",
   },
   // Qi Wireless Charging (LF)
   {
@@ -217,6 +219,8 @@ export const TECHNOLOGIES = [
     band: "LF",
     range: "~4 cm",
     standard: "Qi (WPC) / Qi2",
+    powerW: 15,
+    powerDisplay: "5 – 15 W",
   },
   // NFC
   {
@@ -237,6 +241,8 @@ export const TECHNOLOGIES = [
     band: "HF",
     range: "~20 cm",
     standard: "ISO/IEC 14443",
+    powerW: 0.2,
+    powerDisplay: "~200 mW (reader)",
   },
   // AM Radio
   {
@@ -257,6 +263,8 @@ export const TECHNOLOGIES = [
     band: "MF",
     range: "Hundreds of miles",
     standard: "ITU Region assignments",
+    powerW: 10000,
+    powerDisplay: "250 W – 50 kW (broadcast)",
   },
   // CB Radio (HF)
   {
@@ -277,6 +285,8 @@ export const TECHNOLOGIES = [
     band: "HF",
     range: "~5 – 15 km",
     standard: "FCC Part 95 Subpart D",
+    powerW: 4,
+    powerDisplay: "4 W (FCC max)",
   },
   // FM Radio
   {
@@ -297,6 +307,8 @@ export const TECHNOLOGIES = [
     band: "VHF",
     range: "~50 miles",
     standard: "ITU Band 8",
+    powerW: 50000,
+    powerDisplay: "3 – 100 kW ERP (broadcast)",
   },
   // Remote Control (IR)
   {
@@ -318,6 +330,8 @@ export const TECHNOLOGIES = [
     range: "~10 meters",
     standard: "RC-5, NEC protocol",
     isIR: true,
+    powerW: 0.1,
+    powerDisplay: "~100 mW (peak LED)",
   },
   // Walkie-Talkie (FRS / GMRS)
   {
@@ -338,6 +352,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "~2 – 8 km (line-of-sight)",
     standard: "FCC Part 95 (FRS / GMRS)",
+    powerW: 2,
+    powerDisplay: "0.5 – 5 W",
   },
   // Bluetooth
   {
@@ -358,6 +374,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "~10–100 m",
     standard: "IEEE 802.15.1",
+    powerW: 0.01,
+    powerDisplay: "1 – 100 mW (Class 1–3)",
   },
   // Wi-Fi 2.4 GHz
   {
@@ -378,6 +396,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "~50 m indoors",
     standard: "IEEE 802.11b/g/n",
+    powerW: 0.1,
+    powerDisplay: "20 – 100 mW",
   },
   // Wi-Fi 5 GHz
   {
@@ -398,6 +418,8 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "~30 m indoors",
     standard: "IEEE 802.11a/n/ac/ax",
+    powerW: 0.2,
+    powerDisplay: "50 – 200 mW",
   },
   // Ultra-Wideband (Apple U1 / U2)
   {
@@ -418,6 +440,8 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "~10 – 30 m",
     standard: "IEEE 802.15.4z",
+    powerW: 0.0005,
+    powerDisplay: "< 1 mW (spectral density limit)",
   },
   // Microwave Oven
   {
@@ -438,6 +462,8 @@ export const TECHNOLOGIES = [
     band: "UHF/SHF",
     range: "Contained within oven",
     standard: "ISM 2.45 GHz band",
+    powerW: 1000,
+    powerDisplay: "700 W – 1.2 kW",
   },
   // Cellular 4G LTE
   {
@@ -458,6 +484,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "~10 km per tower",
     standard: "3GPP Release 8+",
+    powerW: 0.25,
+    powerDisplay: "250 mW (phone) / 40 W (tower)",
   },
   // Cellular 5G
   {
@@ -478,6 +506,8 @@ export const TECHNOLOGIES = [
     band: "SHF (mmWave)",
     range: "~100 m (mmWave)",
     standard: "3GPP Release 15+",
+    powerW: 0.2,
+    powerDisplay: "200 mW (phone) / 50 W (base station)",
   },
   // Satellite (GPS)
   {
@@ -498,6 +528,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "Global (20,200 km altitude)",
     standard: "ICD-GPS-200",
+    powerW: 50,
+    powerDisplay: "~50 W (satellite transmit)",
   },
   // Satellite (Starlink / Ka-band)
   {
@@ -518,6 +550,8 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "Global coverage",
     standard: "Ka-band ITU allocation",
+    powerW: 25,
+    powerDisplay: "~25 W (user terminal uplink)",
   },
   // Automotive Millimeter-Wave Radar (EHF)
   {
@@ -538,6 +572,8 @@ export const TECHNOLOGIES = [
     band: "EHF",
     range: "~150 – 250 m",
     standard: "ETSI EN 302 264 (77 GHz)",
+    powerW: 0.05,
+    powerDisplay: "10 – 100 mW",
   },
   // Apple TrueDepth Camera (Near-IR)
   {
@@ -558,6 +594,8 @@ export const TECHNOLOGIES = [
     band: "Near-IR",
     range: "~20 – 50 cm",
     standard: "Apple TrueDepth (940 nm)",
+    powerW: 0.03,
+    powerDisplay: "~30 mW (VCSEL array)",
   },
   // Fiber Optic
   {
@@ -578,6 +616,8 @@ export const TECHNOLOGIES = [
     band: "IR/Near-IR",
     range: "Hundreds of km (with repeaters)",
     standard: "ITU-T G.652 / G.657",
+    powerW: 0.005,
+    powerDisplay: "~5 mW (laser transmitter)",
   },
   // RFID
   {
@@ -598,6 +638,8 @@ export const TECHNOLOGIES = [
     band: "UHF",
     range: "Up to 12 m (UHF)",
     standard: "ISO 18000 / EPCglobal",
+    powerW: 1,
+    powerDisplay: "0.1 – 2 W (reader EIRP)",
   },
   // Radar
   {
@@ -618,6 +660,8 @@ export const TECHNOLOGIES = [
     band: "SHF",
     range: "Up to 400 km (military)",
     standard: "Various IEEE radar bands",
+    powerW: 50000,
+    powerDisplay: "50 mW – 1 MW (varies by system)",
   },
   // Visible-Light LED
   {
@@ -638,6 +682,8 @@ export const TECHNOLOGIES = [
     band: "Visible",
     range: "Optical line-of-sight",
     standard: "IEC 62504",
+    powerW: 15,
+    powerDisplay: "3 – 100 W (bulb)",
   },
   // UV-C Germicidal Light
   {
@@ -658,6 +704,8 @@ export const TECHNOLOGIES = [
     band: "UV-C",
     range: "Direct exposure (cm – m)",
     standard: "IEC 62471 (photobiological safety)",
+    powerW: 30,
+    powerDisplay: "10 – 100 W",
   },
   // Diagnostic Medical X-Ray
   {
@@ -678,6 +726,8 @@ export const TECHNOLOGIES = [
     band: "X-Ray",
     range: "Contained in shielded rooms",
     standard: "IEC 60601-2-54",
+    powerW: 2500,
+    powerDisplay: "~2.5 kW (tube during exposure)",
   },
   // PET / Gamma Imaging
   {
@@ -698,6 +748,8 @@ export const TECHNOLOGIES = [
     band: "Gamma",
     range: "Detector ring (~50 cm)",
     standard: "IEC 61675-1 (PET performance)",
+    powerW: 0.00006,
+    powerDisplay: "~60 μW (10 mCi radiotracer)",
   },
 ];
 
