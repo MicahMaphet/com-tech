@@ -1,12 +1,12 @@
-// TWIN: ./PowerInfoPanel.jsx — same card layout on the power page.
+// TWIN: ./PowerInfoPanel.jsx — same card layout, promotes range to the hero row.
 import { useEffect } from "react";
 import { getTechIcon } from "../icons/getTechIcon";
 
 /**
- * Slide-in detail card for the currently-selected technology.
- * Closes on `Esc` and on background clicks (handled by the parent).
+ * Slide-in detail card for the range page.
+ * Shows operational distance prominently alongside the usual tech metadata.
  */
-export function InfoPanel({ tech, onClose }) {
+export function RangeInfoPanel({ tech, onClose }) {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
@@ -22,7 +22,7 @@ export function InfoPanel({ tech, onClose }) {
       className="info-panel"
       role="dialog"
       aria-modal="false"
-      aria-labelledby="info-panel-title"
+      aria-labelledby="range-panel-title"
       onClick={(e) => e.stopPropagation()}
     >
       <button
@@ -38,26 +38,30 @@ export function InfoPanel({ tech, onClose }) {
           {getTechIcon(tech.svgIcon, 44, tech.color)}
         </div>
         <div>
-          <h2 id="info-panel-title" style={{ color: tech.color, margin: 0 }}>
+          <h2 id="range-panel-title" style={{ color: tech.color, margin: 0 }}>
             {tech.name}
           </h2>
           <p className="full-name">{tech.fullName}</p>
         </div>
       </div>
       <dl className="info-grid">
+        <div className="info-item" style={{ gridColumn: "1 / -1" }}>
+          <dt className="label">Operational Range</dt>
+          <dd className="value freq-val" style={{ color: tech.color }}>
+            {tech.rangeDisplay ?? tech.range}
+          </dd>
+        </div>
         <div className="info-item">
           <dt className="label">Frequency</dt>
-          <dd className="value freq-val" style={{ color: tech.color }}>
-            {tech.freqDisplay}
-          </dd>
+          <dd className="value">{tech.freqDisplay}</dd>
+        </div>
+        <div className="info-item">
+          <dt className="label">Power</dt>
+          <dd className="value">{tech.powerDisplay}</dd>
         </div>
         <div className="info-item">
           <dt className="label">Band</dt>
           <dd className="value">{tech.band}</dd>
-        </div>
-        <div className="info-item">
-          <dt className="label">Range</dt>
-          <dd className="value">{tech.range}</dd>
         </div>
         <div className="info-item">
           <dt className="label">Standard</dt>

@@ -1,3 +1,7 @@
+// Domain-agnostic: rendered by both SpectrumViz and PowerViz.
+// The `displayLabel` prop overrides the aria-label suffix — pass
+// `tech.freqDisplay` on the frequency page and `tech.powerDisplay` on the
+// power page. Never hard-code either of them here.
 import { getTechIcon } from "../icons/getTechIcon";
 import { BAR_H, BAR_Y } from "../spectrumMath";
 

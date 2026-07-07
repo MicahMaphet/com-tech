@@ -4,6 +4,8 @@
 // High-level EM spectrum categories that group the ITU bands into the
 // familiar physics labels (radio, microwaves, IR, visible, UV, X-ray, gamma).
 // Boundaries are non-overlapping and align with the SPECTRUM_BANDS edges.
+// TWIN: ./powerData.js — same shape for the log-Watts axis.
+
 export const SPECTRUM_CATEGORIES = [
   { name: "Radio",       freqMin: 3,       freqMax: 3e9 },
   { name: "Microwaves",  freqMin: 3e9,     freqMax: 300e9 },
@@ -199,6 +201,8 @@ export const TECHNOLOGIES = [
     standard: "IEC 60038 (50 / 60 Hz)",
     powerW: 1000,
     powerDisplay: "~1 kW (household circuit)",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // Qi Wireless Charging (LF)
   {
@@ -221,6 +225,8 @@ export const TECHNOLOGIES = [
     standard: "Qi (WPC) / Qi2",
     powerW: 15,
     powerDisplay: "5 – 15 W",
+    rangeM: 0.04,
+    rangeDisplay: "~4 cm",
   },
   // NFC
   {
@@ -243,6 +249,8 @@ export const TECHNOLOGIES = [
     standard: "ISO/IEC 14443",
     powerW: 0.2,
     powerDisplay: "~200 mW (reader)",
+    rangeM: 0.2,
+    rangeDisplay: "~20 cm",
   },
   // AM Radio
   {
@@ -265,6 +273,8 @@ export const TECHNOLOGIES = [
     standard: "ITU Region assignments",
     powerW: 10000,
     powerDisplay: "250 W – 50 kW (broadcast)",
+    rangeM: 320000,
+    rangeDisplay: "~320 km (~200 mi)",
   },
   // CB Radio (HF)
   {
@@ -287,6 +297,8 @@ export const TECHNOLOGIES = [
     standard: "FCC Part 95 Subpart D",
     powerW: 4,
     powerDisplay: "4 W (FCC max)",
+    rangeM: 10000,
+    rangeDisplay: "~5 – 15 km",
   },
   // FM Radio
   {
@@ -309,6 +321,8 @@ export const TECHNOLOGIES = [
     standard: "ITU Band 8",
     powerW: 50000,
     powerDisplay: "3 – 100 kW ERP (broadcast)",
+    rangeM: 80000,
+    rangeDisplay: "~80 km (~50 mi)",
   },
   // Remote Control (IR)
   {
@@ -332,6 +346,8 @@ export const TECHNOLOGIES = [
     isIR: true,
     powerW: 0.1,
     powerDisplay: "~100 mW (peak LED)",
+    rangeM: 10,
+    rangeDisplay: "~10 m",
   },
   // Walkie-Talkie (FRS / GMRS)
   {
@@ -354,6 +370,8 @@ export const TECHNOLOGIES = [
     standard: "FCC Part 95 (FRS / GMRS)",
     powerW: 2,
     powerDisplay: "0.5 – 5 W",
+    rangeM: 5000,
+    rangeDisplay: "~2 – 8 km (LOS)",
   },
   // Bluetooth
   {
@@ -376,6 +394,8 @@ export const TECHNOLOGIES = [
     standard: "IEEE 802.15.1",
     powerW: 0.01,
     powerDisplay: "1 – 100 mW (Class 1–3)",
+    rangeM: 30,
+    rangeDisplay: "~10–100 m",
   },
   // Wi-Fi 2.4 GHz
   {
@@ -398,6 +418,8 @@ export const TECHNOLOGIES = [
     standard: "IEEE 802.11b/g/n",
     powerW: 0.1,
     powerDisplay: "20 – 100 mW",
+    rangeM: 50,
+    rangeDisplay: "~50 m indoors",
   },
   // Wi-Fi 5 GHz
   {
@@ -420,6 +442,8 @@ export const TECHNOLOGIES = [
     standard: "IEEE 802.11a/n/ac/ax",
     powerW: 0.2,
     powerDisplay: "50 – 200 mW",
+    rangeM: 30,
+    rangeDisplay: "~30 m indoors",
   },
   // Ultra-Wideband (Apple U1 / U2)
   {
@@ -442,6 +466,8 @@ export const TECHNOLOGIES = [
     standard: "IEEE 802.15.4z",
     powerW: 0.0005,
     powerDisplay: "< 1 mW (spectral density limit)",
+    rangeM: 20,
+    rangeDisplay: "~10 – 30 m",
   },
   // Microwave Oven
   {
@@ -464,6 +490,8 @@ export const TECHNOLOGIES = [
     standard: "ISM 2.45 GHz band",
     powerW: 1000,
     powerDisplay: "700 W – 1.2 kW",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // Cellular 4G LTE
   {
@@ -486,6 +514,8 @@ export const TECHNOLOGIES = [
     standard: "3GPP Release 8+",
     powerW: 0.25,
     powerDisplay: "250 mW (phone) / 40 W (tower)",
+    rangeM: 10000,
+    rangeDisplay: "~10 km / tower",
   },
   // Cellular 5G
   {
@@ -508,6 +538,8 @@ export const TECHNOLOGIES = [
     standard: "3GPP Release 15+",
     powerW: 0.2,
     powerDisplay: "200 mW (phone) / 50 W (base station)",
+    rangeM: 100,
+    rangeDisplay: "~100 m (mmWave)",
   },
   // Satellite (GPS)
   {
@@ -530,6 +562,8 @@ export const TECHNOLOGIES = [
     standard: "ICD-GPS-200",
     powerW: 50,
     powerDisplay: "~50 W (satellite transmit)",
+    rangeM: 20200000,
+    rangeDisplay: "20 200 km (MEO altitude)",
   },
   // Satellite (Starlink / Ka-band)
   {
@@ -552,6 +586,8 @@ export const TECHNOLOGIES = [
     standard: "Ka-band ITU allocation",
     powerW: 25,
     powerDisplay: "~25 W (user terminal uplink)",
+    rangeM: 550000,
+    rangeDisplay: "~550 km (LEO altitude)",
   },
   // Automotive Millimeter-Wave Radar (EHF)
   {
@@ -574,6 +610,8 @@ export const TECHNOLOGIES = [
     standard: "ETSI EN 302 264 (77 GHz)",
     powerW: 0.05,
     powerDisplay: "10 – 100 mW",
+    rangeM: 200,
+    rangeDisplay: "~150 – 250 m",
   },
   // Apple TrueDepth Camera (Near-IR)
   {
@@ -596,6 +634,8 @@ export const TECHNOLOGIES = [
     standard: "Apple TrueDepth (940 nm)",
     powerW: 0.03,
     powerDisplay: "~30 mW (VCSEL array)",
+    rangeM: 0.35,
+    rangeDisplay: "~20 – 50 cm",
   },
   // Fiber Optic
   {
@@ -618,6 +658,8 @@ export const TECHNOLOGIES = [
     standard: "ITU-T G.652 / G.657",
     powerW: 0.005,
     powerDisplay: "~5 mW (laser transmitter)",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // RFID
   {
@@ -640,6 +682,8 @@ export const TECHNOLOGIES = [
     standard: "ISO 18000 / EPCglobal",
     powerW: 1,
     powerDisplay: "0.1 – 2 W (reader EIRP)",
+    rangeM: 12,
+    rangeDisplay: "up to ~12 m",
   },
   // Radar
   {
@@ -662,6 +706,8 @@ export const TECHNOLOGIES = [
     standard: "Various IEEE radar bands",
     powerW: 50000,
     powerDisplay: "50 mW – 1 MW (varies by system)",
+    rangeM: 400000,
+    rangeDisplay: "up to ~400 km",
   },
   // Visible-Light LED
   {
@@ -684,6 +730,8 @@ export const TECHNOLOGIES = [
     standard: "IEC 62504",
     powerW: 15,
     powerDisplay: "3 – 100 W (bulb)",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // UV-C Germicidal Light
   {
@@ -706,6 +754,8 @@ export const TECHNOLOGIES = [
     standard: "IEC 62471 (photobiological safety)",
     powerW: 30,
     powerDisplay: "10 – 100 W",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // Diagnostic Medical X-Ray
   {
@@ -728,6 +778,8 @@ export const TECHNOLOGIES = [
     standard: "IEC 60601-2-54",
     powerW: 2500,
     powerDisplay: "~2.5 kW (tube during exposure)",
+    rangeM: null,
+    rangeDisplay: null,
   },
   // PET / Gamma Imaging
   {
@@ -750,6 +802,8 @@ export const TECHNOLOGIES = [
     standard: "IEC 61675-1 (PET performance)",
     powerW: 0.00006,
     powerDisplay: "~60 μW (10 mCi radiotracer)",
+    rangeM: null,
+    rangeDisplay: null,
   },
 ];
 

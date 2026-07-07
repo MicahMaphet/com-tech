@@ -1,3 +1,4 @@
+// TWIN: ./PowerViz.jsx — same layout & interaction model on the log-Watts axis.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InfoPanel } from "./components/InfoPanel";
 import { TechPin } from "./components/TechPin";

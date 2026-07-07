@@ -1,8 +1,13 @@
 # Electromagnetic Spectrum Explorer
 
-An interactive, single-page visualisation of the full electromagnetic spectrum
-from **3 Hz to 3 × 10²² Hz** on a logarithmic scale. Zoom up to 150× and pan
-to inspect 26 real-world technologies pinned at their exact frequencies.
+An interactive, two-page visualisation of the technologies around us:
+
+- **Frequency page** — pins 26 real-world technologies on the electromagnetic spectrum from **3 Hz to 3 × 10²² Hz** on a logarithmic scale.
+- **Power page** — the same 26 technologies plotted by their typical transmit / radiated power, from **100 nW to 10 MW**.
+
+Zoom up to 150×, pan, and click any pin for details. A tab bar at the top switches between the two views.
+
+> **AI agents / contributors:** read [`AGENTS.md`](./AGENTS.md) first, then [`ARCHITECTURE.md`](./ARCHITECTURE.md) for depth.
 
 ## Stack
 
@@ -76,19 +81,21 @@ npm run lint     # oxlint
 ```
 src/
 ├── main.jsx                       # ReactDOM entry
-├── App.jsx                        # Thin wrapper → <SpectrumViz />
-├── SpectrumViz.jsx                # Orchestrator: state, hooks, SVG render
-├── index.css                      # All styles (CSS custom properties, dark theme)
-├── spectrumData.js                # SPECTRUM_CATEGORIES, SPECTRUM_BANDS, TECHNOLOGIES
-│                                  #   + freqToPosition, formatFrequency
-├── spectrumMath.js                # Geometry constants, posToHz, posToX,
-│                                  #   clamp, generateTicks
+├── App.jsx                        # Page-tab state → <SpectrumViz /> or <PowerViz />
+├── SpectrumViz.jsx                # Frequency page          [TWIN of PowerViz]
+├── PowerViz.jsx                   # Power page              [TWIN of SpectrumViz]
+├── index.css                      # All styles (dark theme, .app-shell layout)
+├── spectrumData.js                # Hz bands / categories / TECHNOLOGIES [TWIN of powerData]
+├── spectrumMath.js                # SVG geometry (shared) + Hz-specific tick helpers
+├── powerData.js                   # W bands / categories / power math    [TWIN of spectrumData]
 ├── hooks/
-│   ├── useSpectrumView.js         # View window {s,e} + zoom/pan/focus/reset
-│   └── useSpectrumInteractions.js # Wheel, drag, and touch event handling
+│   ├── useSpectrumView.js         # {s,e} + zoom/pan/focus/reset (Hz)  [TWIN of usePowerView]
+│   ├── usePowerView.js            # {s,e} + zoom/pan/focus/reset (W)   [TWIN of useSpectrumView]
+│   └── useSpectrumInteractions.js # Wheel, drag, touch (shared, axis-agnostic)
 ├── components/
-│   ├── TechPin.jsx                # Upward pin marker with staggered stems
-│   └── InfoPanel.jsx              # Slide-in detail card (Esc to close)
+│   ├── TechPin.jsx                # Pin marker (shared; displayLabel prop switches aria)
+│   ├── InfoPanel.jsx              # Frequency detail card  [TWIN of PowerInfoPanel]
+│   └── PowerInfoPanel.jsx         # Power detail card      [TWIN of InfoPanel]
 └── icons/
     ├── TechIcons.jsx              # 20 hand-drawn SVG icon components
     └── getTechIcon.jsx            # key → JSX dispatcher
@@ -96,7 +103,7 @@ src/
 
 ## Adding a new technology
 
-Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`:
+Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`. Both the frequency and the power fields are required:
 
 ```js
 {
@@ -105,6 +112,8 @@ Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`:
   fullName: "Long Range (LoRaWAN)",
   frequency: 915e6,
   freqDisplay: "868 / 915 MHz",
+  powerW: 0.025,
+  powerDisplay: "14 – 25 dBm (25 – 316 mW)",
   color: "#ff44aa",
   svgIcon: "radio",   // reuse an existing icon key
   description: "Low-power wide-area radio for IoT devices.",

@@ -1,3 +1,4 @@
+// TWIN: ./InfoPanel.jsx — same card layout on the frequency page.
 import { useEffect } from "react";
 import { getTechIcon } from "../icons/getTechIcon";
 

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import SpectrumViz from './SpectrumViz'
 import PowerViz from './PowerViz'
+import RangeViz from './RangeViz'
 
 export default function App() {
   const [page, setPage] = useState('frequency')
@@ -24,9 +25,19 @@ export default function App() {
           <span className="page-tab-icon">⚡</span>
           Power (W)
         </button>
+        <button
+          type="button"
+          className={`page-tab ${page === 'range' ? 'page-tab--active' : ''}`}
+          onClick={() => setPage('range')}
+        >
+          <span className="page-tab-icon">↔</span>
+          Range (m)
+        </button>
       </nav>
 
-      {page === 'frequency' ? <SpectrumViz /> : <PowerViz />}
+      {page === 'frequency' && <SpectrumViz />}
+      {page === 'power'     && <PowerViz />}
+      {page === 'range'     && <RangeViz />}
     </div>
   )
 }

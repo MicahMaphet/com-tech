@@ -1,29 +1,65 @@
 # Electromagnetic Spectrum Explorer — Architecture
 
+> **New agents:** read `AGENTS.md` first for the fast orientation, then this file for depth.
+
 ## Stack
 
 - Vite 8, React 19, plain CSS (no external UI libraries, no CSS-in-JS)
 - oxlint for linting
 - Only runtime deps: react + react-dom
 
+## Triple visualisations
+
+The app renders **one page per axis** — a frequency page (Hz), a power page (W), and a range page (m) — selectable via a top tab bar. Everything below the App layer is triplicated in *twin* trios, one per domain. This is a deliberate design choice: each page reads top-to-bottom in isolation, and the twin pattern makes it trivial to add a fourth axis later.
+
+| Role | Frequency (Hz) | Power (W) | Range (m) |
+|---|---|---|---|
+| Data, bands, categories, axis math | `src/spectrumData.js` + `src/spectrumMath.js` | `src/powerData.js` | `src/rangeData.js` |
+| View-window hook (`{s,e}` + zoom/pan/focus) | `src/hooks/useSpectrumView.js` | `src/hooks/usePowerView.js` | `src/hooks/useRangeView.js` |
+| Page component | `src/SpectrumViz.jsx` | `src/PowerViz.jsx` | `src/RangeViz.jsx` |
+| Slide-in detail card | `src/components/InfoPanel.jsx` | `src/components/PowerInfoPanel.jsx` | `src/components/RangeInfoPanel.jsx` |
+
+Every file above starts with a `// TWIN: ./…` header pointing at its counterpart.
+
+**Shared across all pages (no twin):**
+
+- `src/hooks/useSpectrumInteractions.js` — pure 0–1 space, works for any axis.
+- `src/components/TechPin.jsx` — accepts a `displayLabel` prop (defaults to `tech.freqDisplay`); `PowerViz` passes `tech.powerDisplay`, `RangeViz` passes `tech.rangeDisplay`.
+- `src/spectrumMath.js` — `clamp`, `posToX`, SVG geometry constants, zoom limits. (`generateTicks` and `posToHz` are Hz-only; W and m equivalents live in `powerData.js` and `rangeData.js`.)
+- `src/icons/`, `App.jsx` (owns the page-tab state), `index.css`.
+
 ## File map
 
 ```
 com-tech/
+├── AGENTS.md                         # Agent-facing orientation (read first)
+├── ARCHITECTURE.md                   # This file (deep reference)
+├── README.md                         # Product overview + how to run
 ├── index.html                        # Vite entry; sets page title
 └── src/
     ├── main.jsx                      # ReactDOM.createRoot mount
-    ├── App.jsx                       # Thin wrapper → <SpectrumViz />
-    ├── SpectrumViz.jsx               # Orchestrator: composes hooks + components
-    ├── index.css                     # All styles (CSS custom props, dark theme)
-    ├── spectrumData.js               # Pure data: SPECTRUM_CATEGORIES, SPECTRUM_BANDS, TECHNOLOGIES; freqToPosition, formatFrequency, LOG_MIN, LOG_MAX
-    ├── spectrumMath.js               # Geometry constants, clamp, posToHz, posToX, generateTicks
+    ├── App.jsx                       # Page-tab state; renders SpectrumViz / PowerViz / RangeViz inside .app-shell
+    ├── index.css                     # All styles (CSS custom props, dark theme, .app-shell layout)
+    │
+    ├── SpectrumViz.jsx               # Frequency page orchestrator [TWIN: PowerViz.jsx]
+    ├── PowerViz.jsx                  # Power page orchestrator     [TWIN: SpectrumViz.jsx]
+    ├── RangeViz.jsx                  # Range page orchestrator     [TWIN: PowerViz.jsx]
+    │
+    ├── spectrumData.js               # SPECTRUM_CATEGORIES, SPECTRUM_BANDS, TECHNOLOGIES; freqToPosition, formatFrequency, LOG_MIN, LOG_MAX
+    ├── spectrumMath.js               # Geometry constants (SHARED), clamp, posToHz, posToX, generateTicks
+    ├── powerData.js                  # POWER_CATEGORIES, POWER_BANDS; powerToPosition, posToWatts, formatPower, generatePowerTicks, LOG_MIN_W/MAX_W
+    ├── rangeData.js                  # RANGE_CATEGORIES, RANGE_BANDS; rangeToPosition, posToMeters, formatDistance, generateRangeTicks, LOG_MIN_M/MAX_M
+    │
     ├── hooks/
-    │   ├── useSpectrumView.js        # View window state {s,e} + applyZoom, applyPan, focusTech, resetView
-    │   └── useSpectrumInteractions.js# Wheel, mouse-drag, touch (pinch + swipe) → calls applyZoom/applyPan
+    │   ├── useSpectrumView.js        # {s,e} + zoom/pan/focus/reset for the Hz axis   [TWIN: usePowerView.js]
+    │   ├── usePowerView.js           # {s,e} + zoom/pan/focus/reset for the W axis    [TWIN: useSpectrumView.js]
+    │   ├── useRangeView.js           # {s,e} + zoom/pan/focus/reset for the m axis    [TWIN: usePowerView.js]
+    │   └── useSpectrumInteractions.js# Wheel/mouse/touch → applyZoom/applyPan (SHARED, axis-agnostic)
     ├── components/
-    │   ├── TechPin.jsx               # Single pin marker (all upward, staggered stems)
-    │   └── InfoPanel.jsx             # Slide-in detail card; closes on Esc
+    │   ├── TechPin.jsx               # Pin marker (SHARED; displayLabel prop switches aria between freqDisplay/powerDisplay/rangeDisplay)
+    │   ├── InfoPanel.jsx             # Frequency detail card [TWIN: PowerInfoPanel.jsx]
+    │   ├── PowerInfoPanel.jsx       # Power detail card     [TWIN: InfoPanel.jsx]
+    │   └── RangeInfoPanel.jsx        # Range detail card     [TWIN: PowerInfoPanel.jsx]
     └── icons/
         ├── TechIcons.jsx             # 20 hand-drawn SVG icon components
         └── getTechIcon.jsx           # Dispatcher: key string → JSX
@@ -248,18 +284,24 @@ Spans 3 Hz → 3×10²² Hz (≈ 22 decades). Abbreviation text is rendered insi
   id: string           // unique kebab-case
   name: string         // short display label
   fullName: string     // long name for InfoPanel
-  frequency: number    // Hz — canonical pin position on the spectrum
-  freqDisplay: string  // human-readable range string
+  frequency: number    // Hz — canonical pin position on the frequency page
+  freqDisplay: string  // human-readable Hz range string
+  powerW: number       // W — canonical pin position on the power page
+  powerDisplay: string // human-readable power range string
+  rangeM: number|null  // m — canonical pin position on the range page (null → skipped)
+  rangeDisplay: string|null // human-readable distance string (null when rangeM is null)
   color: string        // hex — pin, chip border, InfoPanel accent
   svgIcon: string      // key for getTechIcon()
   description: string
   examples: string[]   // 4 real-world use cases
   band: string         // ITU band label(s)
-  range: string        // typical operational range
+  range: string        // typical operational range (legacy free-text; still shown as fallback)
   standard: string     // governing standard or spec
-  isIR?: boolean       // see gotcha #3 below
+  isIR?: boolean       // see gotcha #3 below — frequency-page-only override
 }
 ```
+
+The `frequency`/`freqDisplay` and `powerW`/`powerDisplay` pairs are required and always numeric on every entry. The `rangeM`/`rangeDisplay` pair is **nullable by design**: technologies with no meaningful free-space distance (wired power, oven cavities, shielded X-ray rooms, contained detector rings, fibre spans between repeaters, room-scale visible-light sources) set both to `null` and are simply filtered out by `RangeViz.jsx`. Always set `null` explicitly rather than omitting the fields — it keeps the omission greppable.
 
 Technologies sorted by frequency:
 
@@ -387,13 +429,29 @@ The `.viz-container` uses `display: flex; flex-direction: column; justify-conten
 
 9. **`visibleBands` / `visibleTechs` memoisation** — Both are `useMemo`-derived from `[s, e]`. The overscan on `visibleTechs` (`pad = viewRange × 0.05`) prevents half-visible pins from suddenly appearing mid-drag.
 
+10. **Layout invariant — `.app-shell` owns the viewport height, not `.app-root`.** With the addition of the page-tab bar, the DOM shape is now:
+
+    ```
+    .app-shell   (height: 100dvh; flex column; overflow: hidden)
+    ├── .page-tabs
+    └── .app-root  (flex: 1; min-height: 0; overflow: hidden)
+    ```
+
+    `.app-root` **must not** carry `min-height: 100dvh` — that pushes the footer off-screen because `.page-tabs` above it consumes real height. The `min-height: 0` on `.app-root` is the critical flex-child trick that lets `.viz-container` shrink correctly.
+
+11. **Range axis is 11 decades (1 mm → 100 000 km) and skips wired/contained tech.** The range page uses a log-metre axis with `LOG_MIN_M = -3`, `LOG_MAX_M = 8`. Seven of the 26 technologies (`ac-power`, `microwave`, `fiber`, `led-light`, `uv-sterilizer`, `xray-medical`, `gamma-pet`) have no meaningful free-space transmission distance — their `rangeM` is `null` and `RangeViz.jsx` filters them out of both the pin layer and the chip nav. The colour bar uses a warm-near → cool-far gradient (touch = red, planetary = deep blue) to invert the power page's cool → hot mapping so the two pages stay visually distinct.
+
+11. **Twin hooks (`useSpectrumView` vs `usePowerView`) are near-duplicates.** Each imports its own domain-specific `toPosition` function at the top of the file, and only differs in the one line inside `focusTech`. This coupling is deliberately kept visible (rather than parameterised as `useAxisView(toPosition)`) so each page's stack is easy to read in isolation and each file can be grepped independently.
+
+12. **`TechPin.displayLabel` prop is required from the power page.** The prop defaults to `tech.freqDisplay`, so callers on the power page must explicitly pass `tech.powerDisplay` (see `PowerViz.jsx`). Do not re-hardcode `tech.freqDisplay` inside `TechPin`.
+
 ---
 
 ## Extending the App
 
 ### Add a technology
 
-Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`. Reuse any existing `svgIcon` key, or add a new icon (see below).
+Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`. Reuse any existing `svgIcon` key, or add a new icon (see below). **Both** the `frequency`/`freqDisplay` and `powerW`/`powerDisplay` pairs are required.
 
 ```js
 {
@@ -409,6 +467,8 @@ Append an entry to `TECHNOLOGIES` in `src/spectrumData.js`. Reuse any existing `
   band: "UHF",
   range: "~15 km rural",
   standard: "LoRa Alliance TS001",
+  powerW: 0.025,
+  powerDisplay: "14 – 25 dBm (25 – 316 mW)",
 }
 ```
 
@@ -430,4 +490,15 @@ Edit `MIN_ZOOM` and `MAX_ZOOM` in `src/spectrumMath.js`.
 
 ### Change the SVG vertical layout
 
-All heights are derived constants in `src/spectrumMath.js`. Edit `PIN_AREA_H`, `LABEL_AREA_H`, `CATEGORY_STRIP_H`, or `BAR_H` and the rest cascade automatically through `BAR_Y` and `SVG_H`.
+All heights are derived constants in `src/spectrumMath.js`. Edit `PIN_AREA_H`, `LABEL_AREA_H`, `CATEGORY_STRIP_H`, or `BAR_H` and the rest cascade automatically through `BAR_Y` and `SVG_H`. Both pages share these constants.
+
+### Add a third axis (e.g. photon energy in eV)
+
+Follow the twin pattern exactly — do **not** attempt to parameterise the existing pairs. `AGENTS.md § Adding a third axis` has the concrete step-by-step; the summary is:
+
+1. Create `src/energyData.js` mirroring `powerData.js` (bands, categories, `energyToPosition`, `posToEnergy`, `formatEnergy`, `generateEnergyTicks`).
+2. Create `src/hooks/useEnergyView.js` by copying `usePowerView.js` and swapping the `toPosition` import.
+3. Create `src/EnergyViz.jsx` and `src/components/EnergyInfoPanel.jsx` from their power counterparts.
+4. Add `energyEV` (number) and `energyDisplay` (string) to every `TECHNOLOGIES` entry.
+5. Add a third `.page-tab` in `App.jsx`.
+6. Add `// TWIN: …` header comments to each new file so the pairing stays discoverable.

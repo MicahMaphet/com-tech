@@ -113,6 +113,18 @@ h1 {
   font-weight: 800;
 }
 
+.range-text {
+  color: #ff8844;
+  background: linear-gradient(
+    90deg,
+    #cc2244, #ff5522, #ff9922, #ccbb22, #22bb66, #22aacc, #2255cc, #1a1a66
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
 .rainbow-text {
   /* Fallback for browsers that fail the gradient-clip trick. */
   color: #d4d4f0;
@@ -401,6 +413,14 @@ h1 {
     to right,
     #190044, #3300aa, #0044cc, #00aacc,
     #00bb66, #cccc00, #ff9900, #ff3300
+  );
+}
+
+.range-minimap {
+  background: linear-gradient(
+    to right,
+    #cc2244, #ff5522, #ff9922, #ccbb22,
+    #22bb66, #22aacc, #2255cc, #1a1a66
   );
 }
 

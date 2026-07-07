@@ -1,17 +1,19 @@
-// TWIN: ./useSpectrumView.js — same shape, positions techs by `tech.frequency`
-// (via freqToPosition) instead of by `tech.powerW` (via powerToPosition).
+// TWIN: ./usePowerView.js — same shape, positions techs by `tech.rangeM`
+// (via rangeToPosition) instead of by `tech.powerW` (via powerToPosition).
 import { useCallback, useState } from "react";
-import { powerToPosition } from "../powerData";
+import { rangeToPosition } from "../rangeData";
 import { clamp, MAX_ZOOM, MIN_ZOOM } from "../spectrumMath";
 
 // How wide a window `focusTech` opens when clicking a chip.
 const FOCUS_SPAN = 0.045;
 
 /**
- * Identical contract to useSpectrumView but positions technologies by their
- * `powerW` field using the log-Watts axis instead of the log-Hz axis.
+ * Identical contract to usePowerView but positions technologies by their
+ * `rangeM` field using the log-metre axis. Entries whose `rangeM` is null
+ * (wired / contained technologies with no meaningful free-space range) are
+ * handled by RangeViz.jsx via a filter; `focusTech` no-ops on them too.
  */
-export function usePowerView() {
+export function useRangeView() {
   const [view, setView] = useState({ s: 0, e: 1 });
 
   const applyZoom = useCallback((focalFrac, factor) => {
@@ -39,7 +41,8 @@ export function usePowerView() {
   }, []);
 
   const focusTech = useCallback((tech) => {
-    const pos = powerToPosition(tech.powerW);
+    if (tech.rangeM == null) return;
+    const pos = rangeToPosition(tech.rangeM);
     let s = pos - FOCUS_SPAN / 2;
     let e = pos + FOCUS_SPAN / 2;
     if (s < 0) { s = 0; e = FOCUS_SPAN; }

@@ -1,19 +1,21 @@
-// TWIN: ./SpectrumViz.jsx — same layout & interaction model on the log-Hz axis.
+// TWIN: ./PowerViz.jsx — same layout & interaction model on the log-metre axis.
+// Entries whose `rangeM` is null (wired / contained technologies) are filtered
+// out here and do not appear as pins or chips on the range page.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { PowerInfoPanel } from "./components/PowerInfoPanel";
+import { RangeInfoPanel } from "./components/RangeInfoPanel";
 import { TechPin } from "./components/TechPin";
 import { useSpectrumInteractions } from "./hooks/useSpectrumInteractions";
-import { usePowerView } from "./hooks/usePowerView";
+import { useRangeView } from "./hooks/useRangeView";
 import { getTechIcon } from "./icons/getTechIcon";
 import { TECHNOLOGIES } from "./spectrumData";
 import {
-  formatPower,
-  generatePowerTicks,
-  posToWatts,
-  powerToPosition,
-  POWER_BANDS,
-  POWER_CATEGORIES,
-} from "./powerData";
+  formatDistance,
+  generateRangeTicks,
+  posToMeters,
+  rangeToPosition,
+  RANGE_BANDS,
+  RANGE_CATEGORIES,
+} from "./rangeData";
 import {
   BAR_H,
   BAR_Y,
@@ -25,9 +27,9 @@ import {
 const KEY_ZOOM_STEP = 1.3;
 const KEY_PAN_STEP  = 0.15;
 
-export default function PowerViz() {
+export default function RangeViz() {
   const containerRef = useRef(null);
-  const { view, applyZoom, applyPan, focusTech, resetView } = usePowerView();
+  const { view, applyZoom, applyPan, focusTech, resetView } = useRangeView();
   const [selectedTech, setSelectedTech] = useState(null);
   const [width, setWidth] = useState(VB_W);
 
@@ -89,12 +91,18 @@ export default function PowerViz() {
     return () => window.removeEventListener("keydown", onKey);
   }, [applyPan, applyZoom, reset]);
 
+  // Only technologies with a numeric rangeM show up on this page.
+  const rangedTechs = useMemo(
+    () => TECHNOLOGIES.filter((t) => t.rangeM != null),
+    [],
+  );
+
   // ── derived render data ───────────────────────────────────────────────────
   const visibleBands = useMemo(
     () =>
-      POWER_BANDS.filter((b) => {
-        const bS = powerToPosition(b.wMin);
-        const bE = powerToPosition(b.wMax);
+      RANGE_BANDS.filter((b) => {
+        const bS = rangeToPosition(b.mMin);
+        const bE = rangeToPosition(b.mMax);
         return bE > s && bS < e;
       }),
     [s, e],
@@ -102,9 +110,9 @@ export default function PowerViz() {
 
   const visibleCategories = useMemo(
     () =>
-      POWER_CATEGORIES.filter((c) => {
-        const cS = powerToPosition(c.wMin);
-        const cE = powerToPosition(c.wMax);
+      RANGE_CATEGORIES.filter((c) => {
+        const cS = rangeToPosition(c.mMin);
+        const cE = rangeToPosition(c.mMax);
         return cE > s && cS < e;
       }),
     [s, e],
@@ -112,16 +120,18 @@ export default function PowerViz() {
 
   const visibleTechs = useMemo(() => {
     const pad = viewRange * 0.05;
-    return TECHNOLOGIES.map((tech, idx) => ({ tech, idx })).filter(({ tech }) => {
-      const p = powerToPosition(tech.powerW);
-      return p >= s - pad && p <= e + pad;
-    });
-  }, [s, e, viewRange]);
+    return rangedTechs
+      .map((tech, idx) => ({ tech, idx }))
+      .filter(({ tech }) => {
+        const p = rangeToPosition(tech.rangeM);
+        return p >= s - pad && p <= e + pad;
+      });
+  }, [s, e, viewRange, rangedTechs]);
 
-  const ticks = useMemo(() => generatePowerTicks(s, e), [s, e]);
+  const ticks = useMemo(() => generateRangeTicks(s, e), [s, e]);
 
-  const wattsLeft  = posToWatts(s);
-  const wattsRight = posToWatts(e);
+  const metersLeft  = posToMeters(s);
+  const metersRight = posToMeters(e);
 
   // ── render ────────────────────────────────────────────────────────────────
   return (
@@ -129,7 +139,7 @@ export default function PowerViz() {
       <header className="app-header">
         <div className="header-content">
           <h1>
-            <span className="power-text">Signal Power Levels</span>
+            <span className="range-text">Communication Range</span>
             <span className="subtitle"> Interactive Explorer</span>
           </h1>
           <div className="header-controls">
@@ -171,7 +181,7 @@ export default function PowerViz() {
       </header>
 
       <nav className="tech-nav" aria-label="Jump to technology">
-        {TECHNOLOGIES.map((t) => (
+        {rangedTechs.map((t) => (
           <button
             type="button"
             key={t.id}
@@ -201,19 +211,19 @@ export default function PowerViz() {
           preserveAspectRatio="none"
           className="spectrum-svg"
           role="img"
-          aria-label="Signal power levels from 100 nW to 10 MW"
+          aria-label="Communication ranges from 1 mm to 100,000 km"
         >
           <defs>
-            {/* Cool-to-hot gradient: represents increasing power */}
-            <linearGradient id="powerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"    stopColor="#190044" />
-              <stop offset="14.3%" stopColor="#3300aa" />
-              <stop offset="28.6%" stopColor="#0044cc" />
-              <stop offset="42.9%" stopColor="#00aacc" />
-              <stop offset="57.1%" stopColor="#00bb66" />
-              <stop offset="71.4%" stopColor="#cccc00" />
-              <stop offset="85.7%" stopColor="#ff9900" />
-              <stop offset="100%" stopColor="#ff3300" />
+            {/* Warm-near → cool-far gradient (decorative; overlaid by band rects). */}
+            <linearGradient id="rangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"    stopColor="#cc2244" />
+              <stop offset="14.3%" stopColor="#ff5522" />
+              <stop offset="28.6%" stopColor="#ff9922" />
+              <stop offset="42.9%" stopColor="#ccbb22" />
+              <stop offset="57.1%" stopColor="#22bb66" />
+              <stop offset="71.4%" stopColor="#22aacc" />
+              <stop offset="85.7%" stopColor="#2255cc" />
+              <stop offset="100%"  stopColor="#1a1a66" />
             </linearGradient>
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="4" result="blur" />
@@ -224,10 +234,10 @@ export default function PowerViz() {
             </filter>
           </defs>
 
-          {/* Power band segments */}
+          {/* Range band segments */}
           {visibleBands.map((band) => {
-            const bS = powerToPosition(band.wMin);
-            const bE = powerToPosition(band.wMax);
+            const bS = rangeToPosition(band.mMin);
+            const bE = rangeToPosition(band.mMax);
             const x  = posToX(bS, s, e, width);
             const w  = ((bE - bS) / viewRange) * width;
             const wFrac = (bE - bS) / viewRange;
@@ -278,8 +288,8 @@ export default function PowerViz() {
 
           {/* Broad category labels below the bar */}
           {visibleCategories.map((cat) => {
-            const cS = powerToPosition(cat.wMin);
-            const cE = powerToPosition(cat.wMax);
+            const cS = rangeToPosition(cat.mMin);
+            const cE = rangeToPosition(cat.mMax);
             const vS = Math.max(cS, s);
             const vE = Math.min(cE, e);
             const midPos = (vS + vE) / 2;
@@ -332,7 +342,7 @@ export default function PowerViz() {
 
           {/* Technology pins */}
           {visibleTechs.map(({ tech, idx }) => {
-            const p = powerToPosition(tech.powerW);
+            const p = rangeToPosition(tech.rangeM);
             const x = posToX(p, s, e, width);
             return (
               <TechPin
@@ -343,23 +353,23 @@ export default function PowerViz() {
                 isSelected={selectedTech?.id === tech.id}
                 onClick={togglePin}
                 zoomLevel={zoomLevel}
-                displayLabel={tech.powerDisplay}
+                displayLabel={tech.rangeDisplay}
               />
             );
           })}
         </svg>
 
         {selectedTech && (
-          <PowerInfoPanel tech={selectedTech} onClose={() => setSelectedTech(null)} />
+          <RangeInfoPanel tech={selectedTech} onClose={() => setSelectedTech(null)} />
         )}
       </div>
 
       <footer className="freq-footer">
-        <span className="freq-label freq-label-left">{formatPower(wattsLeft)}</span>
+        <span className="freq-label freq-label-left">{formatDistance(metersLeft)}</span>
         <div
-          className="minimap power-minimap"
+          className="minimap range-minimap"
           role="img"
-          aria-label={`Viewing ${formatPower(wattsLeft)} to ${formatPower(wattsRight)}`}
+          aria-label={`Viewing ${formatDistance(metersLeft)} to ${formatDistance(metersRight)}`}
         >
           <div
             className="minimap-view"
@@ -369,7 +379,7 @@ export default function PowerViz() {
             }}
           />
         </div>
-        <span className="freq-label freq-label-right">{formatPower(wattsRight)}</span>
+        <span className="freq-label freq-label-right">{formatDistance(metersRight)}</span>
       </footer>
     </div>
   );

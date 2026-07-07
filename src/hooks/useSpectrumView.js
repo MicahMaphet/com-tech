@@ -1,3 +1,5 @@
+// TWIN: ./usePowerView.js — same shape, positions techs by `tech.powerW`
+// (via powerToPosition) instead of by `tech.frequency` (via freqToPosition).
 import { useCallback, useState } from "react";
 import { freqToPosition } from "../spectrumData";
 import { clamp, MAX_ZOOM, MIN_ZOOM } from "../spectrumMath";

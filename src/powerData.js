@@ -1,3 +1,4 @@
+// TWIN: ./spectrumData.js + ./spectrumMath.js — same shape for the log-Hz axis.
 // Power-axis data: technology transmit / radiated power levels in Watts.
 // Used by PowerViz and related components.
 
