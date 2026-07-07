@@ -69,57 +69,38 @@ export const POWER_CATEGORIES = [
 // ── detailed power bands (colour bar segments, cool → hot) ────────────────────
 export const POWER_BANDS = [
   {
-    name: "Nano-power",       abbr: "nW",
+    name: "nW",
+    abbr: "nW",
     wMin: 1e-7, wMax: 1e-6,
     color: "#190044",
   },
   {
-    name: "Micro-power",      abbr: "μW",
+    name: "μW",
+    abbr: "μW",
     wMin: 1e-6, wMax: 1e-3,
     color: "#3300aa",
   },
   {
-    name: "Low Milliwatt",    abbr: "lo-mW",
-    wMin: 1e-3, wMax: 1e-2,
-    color: "#0044cc",
-  },
-  {
-    name: "Mid Milliwatt",    abbr: "mW",
-    wMin: 1e-2, wMax: 1e-1,
+    name: "mW",
+    abbr: "mW",
+    wMin: 1e-3, wMax: 1e-1,
     color: "#0088cc",
   },
   {
-    name: "High Milliwatt",   abbr: "hi-mW",
-    wMin: 1e-1, wMax: 1,
-    color: "#00aacc",
-  },
-  {
-    name: "Low Watt",         abbr: "lo-W",
-    wMin: 1, wMax: 10,
-    color: "#00bb66",
-  },
-  {
-    name: "Mid Watt",         abbr: "W",
-    wMin: 10, wMax: 100,
+    name: "W",
+    abbr: "W",
+    wMin: 1e-1, wMax: 1e3,
     color: "#66cc00",
   },
   {
-    name: "High Watt",        abbr: "hi-W",
-    wMin: 100, wMax: 1e3,
-    color: "#cccc00",
-  },
-  {
-    name: "Low Kilowatt",     abbr: "lo-kW",
-    wMin: 1e3, wMax: 1e4,
+    name: "kW",
+    abbr: "kW",
+    wMin: 1e3, wMax: 1e6,
     color: "#ff9900",
   },
   {
-    name: "High Kilowatt",    abbr: "kW",
-    wMin: 1e4, wMax: 1e6,
-    color: "#ff3300",
-  },
-  {
-    name: "Megawatt",         abbr: "MW",
+    name: "MW",
+    abbr: "MW",
     wMin: 1e6, wMax: 1e7,
     color: "#880000",
   },
